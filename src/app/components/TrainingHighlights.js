@@ -10,19 +10,22 @@ const trainings = [
     title: "Fundamentals of Antennas & EM Theory",
     description:
       "An introduction to the principles of electromagnetic wave propagation and antenna design.",
-    icon: <GiRadioTower className="text-indigo-500 text-4xl" />,
+    icon: GiRadioTower,
+    color: "text-indigo-500",
   },
   {
     title: "Computational Electromagnetics",
     description:
       "Hands-on training using simulation tools such as ANSYS HFSS, CST Studio, and Altair FEKO.",
-    icon: <GiMagnet className="text-purple-500 text-4xl" />,
+    icon: GiMagnet,
+    color: "text-purple-500",
   },
   {
     title: "Antenna Characterization",
     description:
       "Practical sessions on using vector network analyzers and anechoic chambers for RF testing.",
-    icon: <GiRadarSweep className="text-pink-500 text-4xl" />,
+    icon: GiRadarSweep,
+    color: "text-pink-500",
   },
 ];
 
@@ -41,24 +44,22 @@ export default function TrainingHighlights() {
 
   return (
     <section
-      className={`relative py-20 overflow-hidden z-10 ${
-        theme === "dark"
-          ? "bg-gradient-to-br from-gray-900 via-indigo-950 to-gray-800"
-          : "bg-gradient-to-br from-gray-100 via-white to-gray-50"
-      }`}
+      className="relative py-20 overflow-hidden"
+      style={{
+        backgroundColor: "var(--bg-primary)",
+        color: "var(--text-primary)",
+      }}
     >
       <div className="max-w-6xl mx-auto px-6">
         {/* Heading */}
         <motion.h2
-          className={`text-3xl sm:text-4xl font-extrabold text-center font-orbitron ${
-            theme === "dark" ? "text-white" : "text-gray-800"
-          }`}
+          className="text-3xl sm:text-4xl font-extrabold text-center font-orbitron"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
         >
           Training & Internships
           <div
-            className="w-24 h-1 mx-auto mt-3 rounded-full animate-pulse"
+            className="w-28 h-1 mx-auto mt-3 rounded-full animate-pulse"
             style={{
               background:
                 "linear-gradient(to right, var(--accent), var(--highlight))",
@@ -68,9 +69,8 @@ export default function TrainingHighlights() {
 
         {/* Description */}
         <motion.p
-          className={`text-lg sm:text-xl text-center max-w-3xl mx-auto mt-6 mb-14 ${
-            theme === "dark" ? "text-gray-300" : "text-gray-700"
-          }`}
+          className="text-lg sm:text-xl text-center max-w-3xl mx-auto mt-6 mb-14"
+          style={{ color: "var(--text-secondary)" }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
@@ -81,37 +81,53 @@ export default function TrainingHighlights() {
         </motion.p>
 
         {/* Cards */}
-        <div className="grid gap-8 md:grid-cols-3">
-          {trainings.map((training, index) => (
-            <motion.div
-              key={index}
-              className={`p-6 rounded-2xl shadow-lg backdrop-blur-md border transition-transform duration-300 hover:shadow-2xl hover:-translate-y-2 ${
-                theme === "dark"
-                  ? "bg-white/10 border-white/20 text-white"
-                  : "bg-black/5 border-black/10 text-gray-800"
-              }`}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.15 }}
-              viewport={{ once: true }}
-            >
-              <div className="flex justify-center mb-4">{training.icon}</div>
-              <h3
-                className={`text-lg font-semibold text-center mb-2 ${
-                  theme === "dark" ? "text-white" : "text-gray-800"
-                }`}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+          {trainings.map((item, index) => {
+            const Icon = item.icon;
+            return (
+              <motion.div
+                key={index}
+                className="group p-6 rounded-2xl backdrop-blur-md shadow-2xl transition-all duration-300 border hover:shadow-[0_0_20px_var(--accent)] text-center"
+                style={{
+                  backgroundColor: "var(--card-bg)",
+                  borderColor: "var(--card-border)",
+                }}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.15 }}
+                viewport={{ once: true }}
               >
-                {training.title}
-              </h3>
-              <p
-                className={`text-sm text-center ${
-                  theme === "dark" ? "text-gray-300" : "text-gray-700"
-                }`}
-              >
-                {training.description}
-              </p>
-            </motion.div>
-          ))}
+                {/* Centered Icon */}
+                <motion.div
+                  className={`w-16 h-16 flex items-center justify-center mx-auto mb-6 rounded-full border-2 border-[var(--card-border)] ${item.color} group-hover:scale-110 transition-transform duration-300`}
+                  animate={{ scale: [1, 1.1, 1] }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                >
+                  <Icon className="text-3xl" />
+                </motion.div>
+
+                {/* Title */}
+                <h3
+                  className="text-xl font-semibold mb-2"
+                  style={{ color: "var(--text-primary)" }}
+                >
+                  {item.title}
+                </h3>
+
+                {/* Description */}
+                <p
+                  className="text-sm"
+                  style={{ color: "var(--text-secondary)" }}
+                >
+                  {item.description}
+                </p>
+              </motion.div>
+            );
+          })}
         </div>
 
         {/* CTA */}

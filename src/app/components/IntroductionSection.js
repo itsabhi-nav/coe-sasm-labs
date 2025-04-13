@@ -16,6 +16,7 @@ export default function IntroductionSection() {
   const [theme, setTheme] = useState("dark");
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [hasSpoken, setHasSpoken] = useState(false);
+  const [voice, setVoice] = useState(null);
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-20% 0px" });
 
@@ -27,6 +28,21 @@ export default function IntroductionSection() {
     };
     window.addEventListener("storage", handleStorageChange);
     return () => window.removeEventListener("storage", handleStorageChange);
+  }, []);
+
+  // 🎙 Load voices and pick the best available
+  useEffect(() => {
+    const loadVoices = () => {
+      const voices = window.speechSynthesis.getVoices();
+      const preferredVoice =
+        voices.find((v) => v.name.includes("Google UK English Female")) ||
+        voices.find((v) => v.name.includes("Google US English")) ||
+        voices[0]; // fallback
+      setVoice(preferredVoice);
+    };
+
+    loadVoices();
+    window.speechSynthesis.onvoiceschanged = loadVoices;
   }, []);
 
   const prefersReducedMotion =
@@ -48,13 +64,15 @@ export default function IntroductionSection() {
     },
   };
 
-  const textToSpeak = `
-    The Centre of Excellence in Smart Antenna Systems & Measurements at RV College of Engineering is dedicated to the analysis, design, optimization, and measurement of RF and microwave devices for wireless and defence applications. Established with the support of Rashtreeya Sikshana Samithi Trust, our state-of-the-art facility features cutting-edge equipment—including anechoic chambers, vector network analyzers, and EMI/EMC test beds—to support both funded R&D projects and consultancy.
-  `;
+  const textToSpeak = `Welcome to COE-SASM at RVCE. We work on designing and testing smart antennas for wireless and defense applications. Our lab has advanced tools like anechoic chambers and EMI test beds. Feel free to explore more!`;
 
   const speakNow = () => {
     const utterance = new SpeechSynthesisUtterance(textToSpeak);
-    utterance.lang = "en-IN"; // 🌐 You can change to "hi-IN", "en-US", etc.
+    utterance.voice = voice;
+    utterance.lang = "en-US";
+    utterance.pitch = 1.1;
+    utterance.rate = 0.95;
+    utterance.volume = 1;
     utterance.onend = () => setIsSpeaking(false);
     window.speechSynthesis.speak(utterance);
     setIsSpeaking(true);
@@ -70,14 +88,12 @@ export default function IntroductionSection() {
     }
   };
 
-  // 🔊 Speak when section is scrolled into view
   useEffect(() => {
-    if (isInView && !hasSpoken && !prefersReducedMotion) {
+    if (isInView && !hasSpoken && !prefersReducedMotion && voice) {
       speakNow();
     }
-  }, [isInView]);
+  }, [isInView, voice]);
 
-  // ✍️ Per-letter animation setup
   const animatedHeading = Array.from("Welcome to COE-SASM").map((char, idx) => (
     <motion.span
       key={idx}
@@ -104,11 +120,9 @@ export default function IntroductionSection() {
         <Particles className="absolute inset-0 z-0" options={particleOptions} />
       )}
 
-      {/* Background Blur */}
       <div className="absolute inset-0 z-10 bg-black/10 backdrop-blur-sm" />
 
       <div className="relative z-20 max-w-4xl mx-auto px-6 text-center">
-        {/* ✍️ Heading */}
         <motion.h2
           className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-6 font-orbitron"
           initial="hidden"
@@ -124,7 +138,6 @@ export default function IntroductionSection() {
           />
         </motion.h2>
 
-        {/* Description */}
         <motion.p
           className="text-base sm:text-lg md:text-xl leading-relaxed"
           style={{ color: "var(--text-secondary)" }}
@@ -144,7 +157,6 @@ export default function IntroductionSection() {
           EMI/EMC test beds—to support both funded R&D projects and consultancy.
         </motion.p>
 
-        {/* 🔊 Narration Button */}
         <motion.div
           className="mt-8"
           initial={{ opacity: 0 }}
@@ -168,7 +180,6 @@ export default function IntroductionSection() {
           </button>
         </motion.div>
 
-        {/* CTA */}
         <motion.div
           className="mt-10"
           initial={{ opacity: 0 }}
@@ -191,7 +202,6 @@ export default function IntroductionSection() {
         </motion.div>
       </div>
 
-      {/* Ambient Glow Orbs */}
       <div className="absolute -top-10 left-1/3 w-72 h-72 bg-[var(--highlight)] opacity-20 rounded-full blur-3xl pointer-events-none animate-pulse-slow" />
       <div className="absolute -bottom-10 right-1/4 w-60 h-60 bg-[var(--accent)] opacity-20 rounded-full blur-3xl pointer-events-none animate-pulse-slow" />
     </section>

@@ -12,16 +12,13 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import Tilt from "react-parallax-tilt";
 
-// Dynamic import for particles
 const Particles = dynamic(
   () => import("react-tsparticles").then((mod) => mod.Particles),
-  {
-    ssr: false,
-  }
+  { ssr: false }
 );
 
 export default function VideoIntroductionSection({
-  videoId = "YOUR_VIDEO_ID", // Replace with actual YouTube video ID
+  videoId = "dQw4w9WgXcQ", // Replace with actual video ID
   title = "Facility Virtual Tour",
   description = "Explore our state-of-the-art facilities and advanced research environment.",
   cta = { text: "Learn More", href: "/facilities" },
@@ -32,23 +29,18 @@ export default function VideoIntroductionSection({
   const playerRef = useRef(null);
   const iframeRef = useRef(null);
 
-  // Sync with site's theme
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme") || "dark";
     setTheme(savedTheme);
-    const handleStorageChange = () => {
-      setTheme(localStorage.getItem("theme") || "dark");
-    };
-    window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
+    window.addEventListener("storage", () =>
+      setTheme(localStorage.getItem("theme") || "dark")
+    );
   }, []);
 
-  // Load YouTube Iframe API
   useEffect(() => {
     const tag = document.createElement("script");
     tag.src = "https://www.youtube.com/iframe_api";
-    const firstScriptTag = document.getElementsByTagName("script")[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    document.body.appendChild(tag);
 
     window.onYouTubeIframeAPIReady = () => {
       playerRef.current = new window.YT.Player(iframeRef.current, {
@@ -65,64 +57,6 @@ export default function VideoIntroductionSection({
     };
   }, []);
 
-  // Animation variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5, ease: "easeOut" },
-    },
-  };
-
-  const buttonVariants = {
-    hover: { scale: 1.1, transition: { duration: 0.2 } },
-    tap: { scale: 0.9 },
-  };
-
-  // Reduced motion check
-  const prefersReducedMotion =
-    typeof window !== "undefined" &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  // Particle options
-  const particleOptions = {
-    particles: {
-      number: { value: 30, density: { enable: true, value_area: 800 } },
-      color: { value: theme === "dark" ? "#ffffff" : "#4f46e5" },
-      shape: { type: "circle" },
-      opacity: { value: 0.2, random: true },
-      size: { value: 2, random: true },
-      move: {
-        enable: true,
-        speed: 0.3,
-        direction: "none",
-        random: false,
-        straight: false,
-        out_mode: "out",
-      },
-    },
-    interactivity: {
-      events: {
-        onhover: { enable: true, mode: "repulse" },
-        onclick: { enable: true, mode: "push" },
-      },
-      modes: { repulse: { distance: 100 }, push: { particles_nb: 4 } },
-    },
-  };
-
-  // Video controls
   const togglePlay = () => {
     if (playerRef.current) {
       if (isPlaying) {
@@ -131,148 +65,113 @@ export default function VideoIntroductionSection({
         playerRef.current.playVideo();
       }
     }
-    trackClick(isPlaying ? "Pause Video" : "Play Video");
   };
 
   const toggleFullScreen = () => {
-    if (iframeRef.current) {
-      if (iframeRef.current.requestFullscreen) {
-        iframeRef.current.requestFullscreen();
-      } else if (iframeRef.current.webkitRequestFullscreen) {
-        iframeRef.current.webkitRequestFullscreen();
-      }
+    if (iframeRef.current?.requestFullscreen) {
+      iframeRef.current.requestFullscreen();
     }
-    trackClick("Full Screen Video");
   };
 
-  // Analytics placeholder
-  const trackClick = (label) => {
-    console.log(`Event: ${label}`);
-    // Integrate with Google Analytics: window.gtag("event", label, { event_category: "VideoSection" });
+  const prefersReducedMotion =
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const particleOptions = {
+    particles: {
+      number: { value: 30 },
+      color: { value: theme === "dark" ? "#ffffff" : "#4f46e5" },
+      size: { value: 2 },
+      move: { enable: true, speed: 0.3 },
+    },
   };
 
   return (
     <section
-      className={`relative py-16 sm:py-20 overflow-hidden ${
-        theme === "dark"
-          ? "bg-gradient-to-b from-gray-900 to-gray-800"
-          : "bg-gradient-to-b from-gray-100 to-white"
-      }`}
+      className="relative py-20 overflow-hidden"
+      style={{
+        backgroundColor: "var(--bg-primary)",
+        color: "var(--text-primary)",
+      }}
     >
-      {/* Particle Overlay */}
       {!prefersReducedMotion && (
-        <Particles
-          className="absolute inset-0 z-0"
-          init={() => {}}
-          options={particleOptions}
-        />
+        <Particles className="absolute inset-0 z-0" options={particleOptions} />
       )}
 
-      {/* Glassmorphic Overlay */}
-      <div
-        className={`absolute inset-0 z-10 ${
-          theme === "dark" ? "bg-black/30" : "bg-white/30"
-        } backdrop-blur-sm`}
-      ></div>
+      <div className="absolute inset-0 z-10 bg-black/20 backdrop-blur-sm" />
 
-      <motion.div
-        className="relative z-20 max-w-5xl mx-auto px-4 sm:px-6"
-        variants={containerVariants}
-        initial="hidden"
-        animate={prefersReducedMotion ? "visible" : "visible"}
-      >
+      <div className="relative z-20 max-w-5xl mx-auto px-4 text-center">
         <motion.h2
-          className={`text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-center ${
-            theme === "dark" ? "text-white" : "text-gray-900"
-          } mb-6 sm:mb-8 drop-shadow-lg`}
-          variants={itemVariants}
+          className="text-3xl sm:text-4xl font-extrabold font-orbitron drop-shadow mb-6"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
         >
           {title}
+          <div
+            className="w-28 h-1 mx-auto mt-3 rounded-full animate-pulse"
+            style={{
+              background:
+                "linear-gradient(to right, var(--accent), var(--highlight))",
+            }}
+          />
         </motion.h2>
 
-        <Tilt
-          tiltMaxAngleX={5}
-          tiltMaxAngleY={5}
-          disabled={prefersReducedMotion}
-        >
+        <Tilt tiltMaxAngleX={5} tiltMaxAngleY={5}>
           <motion.div
-            className="relative w-full overflow-hidden rounded-xl shadow-2xl aspect-video group"
-            variants={itemVariants}
-            whileHover={
-              prefersReducedMotion
-                ? {}
-                : { scale: 1.02, transition: { duration: 0.3 } }
-            }
+            className="relative rounded-2xl overflow-hidden shadow-2xl aspect-video group"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
           >
-            {/* Glowing Border */}
-            <div
-              className={`absolute inset-0 border-2 ${
-                theme === "dark" ? "border-indigo-500/50" : "border-blue-500/50"
-              } rounded-xl animate-pulse group-hover:border-opacity-75`}
-            ></div>
+            {/* Glow Border */}
+            <div className="absolute inset-0 border-2 border-[var(--accent)] rounded-2xl animate-pulse pointer-events-none" />
 
-            {/* Video Iframe */}
+            {/* YouTube Embed */}
             <iframe
               ref={iframeRef}
               src={`https://www.youtube.com/embed/${videoId}?enablejsapi=1`}
               title={title}
               className="relative w-full h-full z-10"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allow="autoplay; fullscreen; encrypted-media"
               allowFullScreen
-              loading="lazy"
-            ></iframe>
+              frameBorder="0"
+            />
 
-            {/* Overlay Controls */}
-            <div className="absolute inset-0 z-20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/30">
-              <motion.button
+            {/* Controls */}
+            <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/30 opacity-0 group-hover:opacity-100 transition">
+              <button
                 onClick={togglePlay}
-                className="p-4 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-full"
-                aria-label={isPlaying ? "Pause video" : "Play video"}
-                variants={buttonVariants}
-                whileHover="hover"
-                whileTap="tap"
+                className="text-white mx-2 p-3 rounded-full hover:scale-110 transition"
               >
                 {isPlaying ? (
                   <FiPauseCircle className="w-12 h-12" />
                 ) : (
                   <FiPlayCircle className="w-12 h-12" />
                 )}
-              </motion.button>
-              <motion.button
+              </button>
+              <button
                 onClick={toggleFullScreen}
-                className="absolute bottom-4 right-4 p-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-full"
-                aria-label="Toggle full screen"
-                variants={buttonVariants}
-                whileHover="hover"
-                whileTap="tap"
+                className="text-white absolute bottom-4 right-4 p-2"
               >
                 <FiMaximize className="w-6 h-6" />
-              </motion.button>
-              <motion.button
+              </button>
+              <button
                 onMouseEnter={() => setShowTooltip(true)}
                 onMouseLeave={() => setShowTooltip(false)}
-                className="absolute top-4 right-4 p-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-full"
-                aria-label="Video information"
-                variants={buttonVariants}
-                whileHover="hover"
-                whileTap="tap"
+                className="absolute top-4 right-4 p-2 text-white"
               >
                 <FiInfo className="w-6 h-6" />
-              </motion.button>
+              </button>
+
               <AnimatePresence>
                 {showTooltip && (
                   <motion.div
-                    className={`absolute top-12 right-4 p-2 rounded-lg ${
-                      theme === "dark"
-                        ? "bg-gray-800 text-white"
-                        : "bg-gray-200 text-gray-900"
-                    } text-sm shadow-lg`}
+                    className="absolute top-12 right-4 px-3 py-2 rounded bg-[var(--card-bg)] text-[var(--text-primary)] text-sm shadow-lg"
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                   >
-                    Virtual Tour | 3:45
+                    Virtual Tour · 3:45
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -281,44 +180,33 @@ export default function VideoIntroductionSection({
         </Tilt>
 
         <motion.p
-          className={`text-base sm:text-lg md:text-xl text-center ${
-            theme === "dark" ? "text-gray-300" : "text-gray-700"
-          } mt-4 sm:mt-6 leading-relaxed drop-shadow-md`}
-          variants={itemVariants}
+          className="text-base sm:text-lg mt-6 mb-6 max-w-2xl mx-auto"
+          style={{ color: "var(--text-secondary)" }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
         >
           {description}
         </motion.p>
 
         <motion.div
-          className="flex justify-center mt-6 sm:mt-8"
-          variants={itemVariants}
+          className="flex justify-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
         >
-          <Tilt
-            tiltMaxAngleX={10}
-            tiltMaxAngleY={10}
-            disabled={prefersReducedMotion}
+          <Link
+            href={cta.href}
+            className="inline-block px-6 py-3 text-sm sm:text-base font-semibold rounded-full border-2 border-[var(--accent)] text-[var(--accent)] hover:bg-[var(--accent)] hover:text-white transition-all"
           >
-            <motion.div
-              className={`inline-block py-3 sm:py-4 px-8 sm:px-10 rounded-full text-base sm:text-lg font-semibold transition-all duration-300 border-2 ${
-                theme === "dark"
-                  ? "border-indigo-400 text-indigo-400 hover:bg-indigo-400 hover:text-gray-900"
-                  : "border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white"
-              }`}
-              variants={buttonVariants}
-              whileHover={prefersReducedMotion ? {} : "hover"}
-              whileTap={prefersReducedMotion ? {} : "tap"}
-            >
-              <Link
-                href={cta.href}
-                aria-label={cta.text}
-                onClick={() => trackClick(cta.text)}
-              >
-                {cta.text}
-              </Link>
-            </motion.div>
-          </Tilt>
+            {cta.text}
+          </Link>
         </motion.div>
-      </motion.div>
+      </div>
+
+      {/* Glow Backgrounds */}
+      <div className="absolute top-0 left-1/4 w-72 h-72 bg-[var(--highlight)] opacity-20 blur-3xl pointer-events-none animate-pulse-slow" />
+      <div className="absolute bottom-0 right-1/4 w-60 h-60 bg-[var(--accent)] opacity-20 blur-3xl pointer-events-none animate-pulse-slow" />
     </section>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, useScroll } from "framer-motion";
 import { FiArrowDownCircle } from "react-icons/fi";
 import Link from "next/link";
@@ -25,150 +25,82 @@ export default function HeroSection({
   secondaryCTA = { text: "Contact Us", href: "/contact" },
 }) {
   const [theme, setTheme] = useState("dark");
-  const { scrollYProgress } = useScroll();
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") || "dark";
-    setTheme(savedTheme);
-    const handleStorageChange = () => {
-      setTheme(localStorage.getItem("theme") || "dark");
-    };
-    window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
+    const saved = localStorage.getItem("theme") || "dark";
+    setTheme(saved);
+    const handler = () => setTheme(localStorage.getItem("theme") || "dark");
+    window.addEventListener("storage", handler);
+    return () => window.removeEventListener("storage", handler);
   }, []);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const bg = document.querySelector(".hero-bg");
-      if (bg) {
-        const offset = window.scrollY * 0.2;
-        bg.style.transform = `translateY(${offset}px)`;
-      }
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const prefersReducedMotion =
-    typeof window !== "undefined" &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const particleOptions = {
+    fullScreen: { enable: false },
     particles: {
-      number: { value: 50, density: { enable: true, value_area: 800 } },
-      color: { value: theme === "dark" ? "#ffffff" : "#4f46e5" },
+      number: { value: 20, density: { enable: true, value_area: 800 } },
+      color: { value: "#ffffff" },
+      opacity: { value: 0.2, random: true },
+      size: { value: 2, random: true },
       shape: { type: "circle" },
-      opacity: { value: 0.3, random: true },
-      size: { value: 3, random: true },
-      move: {
-        enable: true,
-        speed: 0.5,
-        direction: "none",
-        random: false,
-        straight: false,
-        out_mode: "out",
-      },
-    },
-    interactivity: {
-      events: {
-        onhover: { enable: true, mode: "repulse" },
-        onclick: { enable: true, mode: "push" },
-      },
-      modes: { repulse: { distance: 100 }, push: { particles_nb: 4 } },
+      move: { enable: true, speed: 0.3, out_mode: "out" },
     },
   };
 
   return (
-    <section
-      className="relative min-h-[90vh] flex flex-col items-center justify-center overflow-hidden font-sans"
-      style={{
-        backgroundColor: "var(--bg-primary)",
-        color: "var(--text-primary)",
-      }}
-    >
-      {/* 🎥 Background GIF */}
-      <div className="absolute inset-0 z-0 hero-bg">
-        <Image
-          src="https://res.cloudinary.com/dcahaaigp/image/upload/v1744561333/1085656-uhd_3840_2160_25fps-ezgif.com-video-to-gif-converter_1_ebwhnz.gif"
-          alt="Smart Antenna Systems Background"
-          fill
-          className="object-cover object-center transition-transform duration-100"
-        />
-      </div>
+    <section className="relative h-screen w-full overflow-hidden">
+      {/* Background Video or Image */}
+      <video
+        className="absolute inset-0 w-full h-full object-cover z-0"
+        src="https://res.cloudinary.com/dcahaaigp/video/upload/f_auto:video,q_auto/p9xll7iisai5y2pj6qc3"
+        autoPlay
+        loop
+        muted
+        playsInline
+      />
+      {/* Fallback Image if needed */}
+      {/* <Image src="/images/hero-bg.jpg" layout="fill" objectFit="cover" className="z-0" alt="Hero Background" /> */}
 
-      {/* 🟣 Particle Overlay */}
-      {!prefersReducedMotion && (
-        <Particles
-          className="absolute inset-0 z-10"
-          options={particleOptions}
-        />
-      )}
+      {/* Overlay */}
+      <div className="absolute inset-0 z-10 bg-black/60 backdrop-blur-sm" />
 
-      {/* 🌫️ Gradient + Blur Overlay */}
-      <div className="absolute inset-0 z-20 bg-gradient-to-b from-black/40 via-black/10 to-black/40 backdrop-blur-[2px]" />
+      {/* Particles */}
+      <Particles className="absolute inset-0 z-10" options={particleOptions} />
 
-      {/* ✍️ Text & CTAs */}
-      <motion.div
-        className="relative z-30 text-center px-6 max-w-6xl mx-auto"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-      >
-        <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-4">
+      {/* Content */}
+      <div className="relative z-20 flex flex-col items-center justify-center h-full text-center px-4">
+        <motion.h1
+          className="text-white font-extrabold text-3xl sm:text-4xl md:text-5xl lg:text-6xl max-w-4xl leading-tight"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+        >
           {headline}
-        </h1>
+        </motion.h1>
 
-        {/* Underline */}
-        <div
-          className="w-28 h-1 mx-auto mb-6 rounded-full animate-pulse"
-          style={{
-            background:
-              "linear-gradient(to right, var(--accent), var(--highlight))",
-          }}
+        {/* Animated Subtitles */}
+        <TypeAnimation
+          sequence={[...subtitles.flatMap((line) => [line, 2000])]}
+          wrapper="p"
+          className="text-white text-lg sm:text-xl md:text-2xl mt-6"
+          repeat={Infinity}
         />
 
-        {/* Typing Animation */}
-        <div className="text-lg md:text-2xl mb-10 leading-relaxed min-h-[2.5rem] text-[var(--text-secondary)]">
-          <TypeAnimation
-            sequence={subtitles.flatMap((text) => [text, 2000])}
-            wrapper="p"
-            repeat={Infinity}
-            speed={50}
-            className="inline-block"
-          />
-        </div>
-
-        {/* Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Tilt
-            tiltMaxAngleX={10}
-            tiltMaxAngleY={10}
-            disabled={prefersReducedMotion}
+        {/* CTAs */}
+        <div className="mt-10 flex gap-4 flex-wrap justify-center">
+          <Link
+            href={primaryCTA.href}
+            className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold py-3 px-6 rounded-full shadow hover:opacity-90 transition"
           >
-            <motion.a
-              href={primaryCTA.href}
-              className="inline-block py-3 px-8 rounded-full text-lg font-semibold text-white bg-gradient-to-r from-[var(--accent)] to-[var(--highlight)] hover:from-indigo-700 hover:to-purple-700 shadow-lg transition"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              {primaryCTA.text}
-            </motion.a>
-          </Tilt>
-          <Tilt
-            tiltMaxAngleX={10}
-            tiltMaxAngleY={10}
-            disabled={prefersReducedMotion}
+            {primaryCTA.text}
+          </Link>
+          <Link
+            href={secondaryCTA.href}
+            className="border border-white text-white font-medium py-3 px-6 rounded-full hover:bg-white hover:text-black transition"
           >
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="inline-block py-3 px-8 rounded-full text-lg font-semibold border-2 border-[var(--accent)] text-[var(--accent)] hover:bg-[var(--accent)] hover:text-white transition shadow-md"
-            >
-              <Link href={secondaryCTA.href}>{secondaryCTA.text}</Link>
-            </motion.div>
-          </Tilt>
+            {secondaryCTA.text}
+          </Link>
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 }

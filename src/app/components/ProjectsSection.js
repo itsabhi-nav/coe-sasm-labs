@@ -55,7 +55,7 @@ export default function ProjectsSection() {
 
   return (
     <section
-      className="py-20 overflow-hidden"
+      className="relative py-20 overflow-hidden"
       style={{
         backgroundColor: "var(--bg-secondary)",
         color: "var(--text-primary)",
@@ -87,60 +87,78 @@ export default function ProjectsSection() {
             return (
               <motion.div
                 key={index}
-                className="p-6 rounded-2xl bg-white/5 backdrop-blur-md border border-white/20 shadow-md hover:shadow-[0_0_20px_var(--accent)] transition-shadow duration-500 flex gap-6 items-start"
+                className="p-6 rounded-2xl backdrop-blur-md shadow-2xl transition-all duration-300 text-left group"
+                style={{
+                  backgroundColor: "var(--card-bg)",
+                  border: "1px solid var(--card-border)",
+                }}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
               >
-                {/* Progress Circle */}
-                <div className="w-16 h-16 shrink-0">
-                  <CircularProgressbar
-                    value={progress}
-                    text={`${progress}%`}
-                    styles={buildStyles({
-                      pathColor: isComplete
-                        ? "var(--accent)"
-                        : "var(--highlight)",
-                      textColor: "var(--text-primary)",
-                      trailColor: "#ffffff30",
-                      textSize: "30px",
-                    })}
-                  />
-                </div>
+                <div className="flex gap-6 items-start">
+                  {/* Progress Circle */}
+                  <motion.div
+                    className="w-16 h-16 shrink-0"
+                    animate={{ y: [0, -6, 0] }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                  >
+                    <CircularProgressbar
+                      value={progress}
+                      text={`${progress}%`}
+                      styles={buildStyles({
+                        pathColor: isComplete
+                          ? "var(--accent)"
+                          : "var(--highlight)",
+                        textColor: "var(--text-primary)",
+                        trailColor: "#cccccc40",
+                        textSize: "24px",
+                      })}
+                    />
+                  </motion.div>
 
-                {/* Project Info */}
-                <div className="flex-1 space-y-1 text-sm">
-                  <h3 className="text-lg font-semibold mb-1 text-[var(--text-primary)]">
-                    {project.title}
-                  </h3>
-                  <p className="text-[var(--text-secondary)]">
-                    <strong>Investigators:</strong> {project.investigators}
-                  </p>
-                  <p className="text-[var(--text-secondary)]">
-                    <strong>Funding:</strong> {project.funding}
-                  </p>
-                  <p className="text-[var(--text-secondary)]">
-                    <strong>Agency:</strong> {project.agency}
-                  </p>
-                  <p>
-                    <strong>Status:</strong>{" "}
-                    <span
-                      className={`inline-block px-2 py-0.5 rounded-full text-xs font-semibold ${
-                        isComplete
-                          ? "bg-[var(--accent)]/20 text-[var(--accent)]"
-                          : "bg-[var(--highlight)]/20 text-[var(--highlight)]"
-                      }`}
-                    >
-                      {project.status}
-                    </span>
-                  </p>
+                  {/* Project Info */}
+                  <div className="flex-1 space-y-1 text-sm">
+                    <h3 className="text-lg font-semibold mb-1 text-[var(--text-primary)]">
+                      {project.title}
+                    </h3>
+                    <p className="text-[var(--text-secondary)]">
+                      <strong>Investigators:</strong> {project.investigators}
+                    </p>
+                    <p className="text-[var(--text-secondary)]">
+                      <strong>Funding:</strong> {project.funding}
+                    </p>
+                    <p className="text-[var(--text-secondary)]">
+                      <strong>Agency:</strong> {project.agency}
+                    </p>
+                    <p>
+                      <strong>Status:</strong>{" "}
+                      <span
+                        className={`inline-block px-2 py-0.5 rounded-full text-xs font-semibold ${
+                          isComplete
+                            ? "bg-[var(--accent)]/20 text-[var(--accent)]"
+                            : "bg-[var(--highlight)]/20 text-[var(--highlight)]"
+                        }`}
+                      >
+                        {project.status}
+                      </span>
+                    </p>
+                  </div>
                 </div>
               </motion.div>
             );
           })}
         </div>
       </div>
+
+      {/* Glowing Backgrounds */}
+      <div className="absolute -top-10 left-1/3 w-72 h-72 bg-[var(--highlight)] opacity-20 rounded-full blur-3xl pointer-events-none animate-pulse-slow" />
+      <div className="absolute -bottom-10 right-1/4 w-60 h-60 bg-[var(--accent)] opacity-20 rounded-full blur-3xl pointer-events-none animate-pulse-slow" />
     </section>
   );
 }
