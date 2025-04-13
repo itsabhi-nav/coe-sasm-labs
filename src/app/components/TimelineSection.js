@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import {
   motion,
   useMotionValue,
@@ -56,20 +56,19 @@ export default function TimelineSection() {
 
   const { baseRadius, radiusStep } = getDimensions();
 
-  // ✅ Safe hook initialization
-  const angleRefs = useRef([]);
-  const transformRefs = useRef([]);
+  // ✅ Safe, static hook usage (4 milestones)
+  const angle1 = useMotionValue(0);
+  const angle2 = useMotionValue(0);
+  const angle3 = useMotionValue(0);
+  const angle4 = useMotionValue(0);
 
-  if (angleRefs.current.length === 0) {
-    milestones.forEach(() => {
-      const angle = useMotionValue(0);
-      angleRefs.current.push(angle);
-      transformRefs.current.push(useTransform(angle, (a) => -a));
-    });
-  }
+  const rot1 = useTransform(angle1, (a) => -a);
+  const rot2 = useTransform(angle2, (a) => -a);
+  const rot3 = useTransform(angle3, (a) => -a);
+  const rot4 = useTransform(angle4, (a) => -a);
 
-  const angles = angleRefs.current;
-  const counterRotations = transformRefs.current;
+  const angles = [angle1, angle2, angle3, angle4];
+  const counterRotations = [rot1, rot2, rot3, rot4];
 
   useEffect(() => {
     const controls = angles.map((angle, index) =>
