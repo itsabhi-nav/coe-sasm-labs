@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   motion,
   useMotionValue,
@@ -56,11 +56,20 @@ export default function TimelineSection() {
 
   const { baseRadius, radiusStep } = getDimensions();
 
-  const angleRefs = useRef(milestones.map(() => useMotionValue(0)));
+  // ✅ Safe hook initialization
+  const angleRefs = useRef([]);
+  const transformRefs = useRef([]);
+
+  if (angleRefs.current.length === 0) {
+    milestones.forEach(() => {
+      const angle = useMotionValue(0);
+      angleRefs.current.push(angle);
+      transformRefs.current.push(useTransform(angle, (a) => -a));
+    });
+  }
+
   const angles = angleRefs.current;
-  const counterRotations = angles.map((angle) =>
-    useTransform(angle, (a) => -a)
-  );
+  const counterRotations = transformRefs.current;
 
   useEffect(() => {
     const controls = angles.map((angle, index) =>
@@ -75,7 +84,7 @@ export default function TimelineSection() {
 
   return (
     <section
-      className={`relative overflow-hidden py-20 flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 to-purple-950`}
+      className="relative overflow-hidden py-20 flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 to-purple-950"
       style={{ color: "var(--text-primary)" }}
     >
       {/* Particles */}
