@@ -117,7 +117,7 @@ export default function InternshipsSection() {
               <SwiperSlide key={index}>
                 <div className="text-center px-6">
                   <p className="text-gray-700 text-lg italic">
-                    "{testi.feedback}"
+                    &ldquo;{testi.feedback}&rdquo;
                   </p>
                   <div className="mt-3 text-indigo-500 font-semibold">
                     – {testi.name}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   motion,
   useMotionValue,
@@ -17,7 +17,6 @@ const Particles = dynamic(
 );
 
 export default function TimelineSection() {
-  const [theme, setTheme] = useState("dark");
   const [focusedEvent, setFocusedEvent] = useState(null);
 
   const milestones = [
@@ -46,11 +45,6 @@ export default function TimelineSection() {
     },
   ];
 
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") || "dark";
-    setTheme(savedTheme);
-  }, []);
-
   const getDimensions = () => {
     if (typeof window === "undefined")
       return { baseRadius: 50, radiusStep: 40 };
@@ -62,13 +56,26 @@ export default function TimelineSection() {
 
   const { baseRadius, radiusStep } = getDimensions();
 
+  const angleRefs = useRef(milestones.map(() => useMotionValue(0)));
+  const angles = angleRefs.current;
+  const counterRotations = angles.map((angle) =>
+    useTransform(angle, (a) => -a)
+  );
+
+  useEffect(() => {
+    const controls = angles.map((angle, index) =>
+      animate(angle, 360, {
+        duration: 30 + index * 10,
+        repeat: Infinity,
+        ease: "linear",
+      })
+    );
+    return () => controls.forEach((ctrl) => ctrl.stop());
+  }, [angles]);
+
   return (
     <section
-      className={`relative overflow-hidden py-20 flex items-center justify-center min-h-screen ${
-        theme === "dark"
-          ? "bg-gradient-to-br from-gray-900 to-purple-950"
-          : "bg-gradient-to-br from-gray-50 to-indigo-100"
-      }`}
+      className={`relative overflow-hidden py-20 flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 to-purple-950`}
       style={{ color: "var(--text-primary)" }}
     >
       {/* Particles */}
@@ -82,8 +89,6 @@ export default function TimelineSection() {
           },
         }}
       />
-
-      {/* Overlay */}
       <div className="absolute inset-0 bg-black/30 backdrop-blur-sm z-10" />
 
       {/* Heading */}
@@ -105,10 +110,10 @@ export default function TimelineSection() {
       {/* Orbit System */}
       <div className="relative z-20 w-full max-w-4xl">
         <div className="relative flex items-center justify-center">
-          {/* Glowing Center Dot */}
+          {/* Glowing center */}
           <motion.div className="absolute w-16 h-16 rounded-full bg-[var(--highlight)] opacity-80 blur-xl animate-pulse-slow" />
 
-          {/* Orbit Rings */}
+          {/* Orbit rings */}
           {Array.from({ length: milestones.length + 1 }).map((_, i) => {
             const size = (baseRadius + i * radiusStep) * 2;
             return (
@@ -120,20 +125,9 @@ export default function TimelineSection() {
             );
           })}
 
-          {/* Milestone Cards */}
+          {/* Milestone cards */}
           {milestones.map((item, index) => {
             const orbitRadius = baseRadius + index * radiusStep;
-            const angle = useMotionValue(0);
-            const counterRotate = useTransform(angle, (a) => -a);
-
-            useEffect(() => {
-              const controls = animate(angle, 360, {
-                duration: 30 + index * 10,
-                repeat: Infinity,
-                ease: "linear",
-              });
-              return () => controls.stop();
-            }, [angle]);
 
             return (
               <motion.div
@@ -142,14 +136,14 @@ export default function TimelineSection() {
                 style={{
                   translateX: "-50%",
                   translateY: "-50%",
-                  rotate: angle,
+                  rotate: angles[index],
                 }}
               >
                 <motion.div
                   className="absolute text-center p-3 rounded-xl backdrop-blur-md border shadow-md cursor-pointer transition-all hover:scale-105"
                   style={{
                     translateX: orbitRadius,
-                    rotate: counterRotate,
+                    rotate: counterRotations[index],
                     backgroundColor: "var(--card-bg)",
                     borderColor: "var(--card-border)",
                     width: 170,
@@ -169,7 +163,7 @@ export default function TimelineSection() {
         </div>
       </div>
 
-      {/* Modal Popup */}
+      {/* Modal */}
       <AnimatePresence>
         {focusedEvent !== null && (
           <motion.div
@@ -204,7 +198,7 @@ export default function TimelineSection() {
         )}
       </AnimatePresence>
 
-      {/* Background Glows */}
+      {/* Background glows */}
       <div className="absolute top-0 left-1/3 w-72 h-72 bg-[var(--highlight)] opacity-20 rounded-full blur-3xl pointer-events-none animate-pulse-slow" />
       <div className="absolute bottom-0 right-1/4 w-60 h-60 bg-[var(--accent)] opacity-20 rounded-full blur-3xl pointer-events-none animate-pulse-slow" />
     </section>
