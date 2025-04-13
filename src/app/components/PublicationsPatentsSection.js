@@ -1,0 +1,118 @@
+"use client";
+
+import React from "react";
+import { motion } from "framer-motion";
+
+export default function PublicationsPatentsSection() {
+  const items = [
+    {
+      title:
+        "Design of Modified U-Slot Multiband Circular Patch Antenna with Cylindrical Dielectric Resonator Antenna",
+      authors: "Shushrutha K S, Pooja T R, Sushma V",
+      conference: "4th IEEE RTEICT (2019)",
+    },
+    {
+      title:
+        "Hybridization of Bayesian Compressive Sensing and Array Dilation Technique for Synthesis of Linear Isophoric Sparse Antenna Arrays",
+      authors: "Mahesh A, Ashutosh Kedar, Pratap Vangol",
+      journal: "IEEE Transactions on Antennas and Propagation, May 2023",
+    },
+    {
+      title:
+        "Method and System to Estimate Angle of Arrival for a Smart Array Antenna",
+      details: "Patent Filed (Filing Date: 30.03.2017, Granted: 14.03.2024)",
+    },
+  ];
+
+  return (
+    <section
+      className="relative py-20 overflow-hidden"
+      style={{
+        backgroundColor: "var(--bg-primary)",
+        color: "var(--text-primary)",
+      }}
+    >
+      <div className="max-w-6xl mx-auto px-6">
+        {/* Heading */}
+        <motion.h2
+          className="text-3xl sm:text-4xl font-extrabold text-center font-orbitron mb-14"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          Publications & Patents
+          <div
+            className="w-28 h-1 mx-auto mt-3 rounded-full animate-pulse"
+            style={{
+              background:
+                "linear-gradient(to right, var(--accent), var(--highlight))",
+            }}
+          />
+        </motion.h2>
+
+        {/* List of Cards */}
+        <div className="space-y-10">
+          {items.map((item, index) => (
+            <motion.div
+              key={index}
+              className={`p-6 rounded-xl backdrop-blur-md shadow-xl border border-white/20 transition-all duration-300 ${
+                item.details ? "bg-purple-200/10" : "bg-white/5"
+              }`}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1 }}
+            >
+              <h3 className="text-xl font-bold text-[var(--text-primary)] mb-2">
+                {item.title}
+              </h3>
+
+              {item.authors && (
+                <p className="text-sm text-[var(--text-secondary)] mb-1">
+                  👨‍🔬 <span className="font-medium">Authors:</span>{" "}
+                  {item.authors}
+                </p>
+              )}
+
+              {item.conference && (
+                <p className="text-sm text-[var(--text-secondary)] mb-1">
+                  🧾 <span className="font-medium">Conference:</span>{" "}
+                  {item.conference}
+                </p>
+              )}
+
+              {item.journal && (
+                <p className="text-sm text-[var(--text-secondary)] mb-1">
+                  📘 <span className="font-medium">Journal:</span>{" "}
+                  {item.journal}
+                </p>
+              )}
+
+              {item.details && (
+                <p className="text-sm text-[var(--text-secondary)]">
+                  🧠 <span className="font-medium">Patent Info:</span>{" "}
+                  {item.details}
+                </p>
+              )}
+            </motion.div>
+          ))}
+        </div>
+
+        {/* CTA Button */}
+        <div className="mt-12 text-center">
+          <a
+            href="https://rvce.edu.in/IDRC-PATENTS-FILED"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-block bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold py-3 px-6 rounded-full shadow-md transition-all duration-300"
+          >
+            View All Publications & Patents
+          </a>
+        </div>
+      </div>
+
+      {/* Glows */}
+      <div className="absolute -top-10 left-1/3 w-72 h-72 bg-[var(--highlight)] opacity-20 rounded-full blur-3xl pointer-events-none animate-pulse-slow" />
+      <div className="absolute -bottom-10 right-1/4 w-60 h-60 bg-[var(--accent)] opacity-20 rounded-full blur-3xl pointer-events-none animate-pulse-slow" />
+    </section>
+  );
+}

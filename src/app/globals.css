@@ -1,26 +1,91 @@
 @import "tailwindcss";
 
+/* 🌑 Dark Mode Tokens */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg-primary: #1a202c;
+  --bg-secondary: #2d3748;
+  --text-primary: #ffffff;
+  --text-secondary: #cbd5e1;
+  --accent: #6366f1;
+  --highlight: #9333ea;
+  --card-bg: rgba(255, 255, 255, 0.05);
+  --card-border: rgba(255, 255, 255, 0.2);
+  --text-heading: #ffffff;
+  --text-body: #cbd5e1;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ☀️ Light Mode Overrides */
+.light {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f7fafc;
+  --text-primary: #1a202c;
+  --text-secondary: #4b5563;
+  --accent: #4f46e5;
+  --highlight: #7c3aed;
+  --card-bg: rgba(0, 0, 0, 0.03);
+  --card-border: rgba(0, 0, 0, 0.1);
+  --text-heading: #1e293b;
+  --text-body: #4b5563;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* 📄 Base Styles */
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* 🧠 Accessibility: Motion Reduced */
+@media (prefers-reduced-motion: reduce) {
+  .animate-pulse,
+  [data-animate] {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ✨ Custom Animations */
+@keyframes pulse-slow {
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+.animate-pulse-slow {
+  animation: pulse-slow 6s infinite ease-in-out;
+}
+
+@keyframes spin-slow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.animate-spin-slow {
+  animation: spin-slow 60s linear infinite;
+}
+
+/* 🔤 Font */
+@font-face {
+  font-family: "Orbitron";
+  src: url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap");
+}
+.font-orbitron {
+  font-family: "Orbitron", sans-serif;
+}
+
+/* 💡 Neumorphism Shadow */
+.shadow-2xl {
+  box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.15),
+    -6px -6px 12px rgba(255, 255, 255, 0.1);
+}
+.dark .shadow-2xl {
+  box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.3),
+    -6px -6px 12px rgba(255, 255, 255, 0.05);
 }
