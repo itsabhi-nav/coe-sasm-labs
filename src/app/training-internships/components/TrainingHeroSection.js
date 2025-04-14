@@ -7,10 +7,13 @@ export default function TrainingHeroSection() {
   return (
     <section
       className="relative h-[50vh] flex items-center justify-center bg-cover bg-center"
-      style={{ backgroundImage: "url('/images/training-hero.jpg')" }}
+      style={{
+        backgroundImage:
+          "url('https://images.pexels.com/photos/572056/pexels-photo-572056.jpeg?auto=compress&cs=tinysrgb&w=1200')",
+      }}
     >
       {/* Overlay */}
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
+      <div className="absolute inset-0 bg-black/70 backdrop-blur-[3px]"></div>
 
       {/* Content */}
       <motion.div

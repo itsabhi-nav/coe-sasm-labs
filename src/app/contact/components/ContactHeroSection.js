@@ -7,11 +7,13 @@ export default function ContactHeroSection() {
   return (
     <section
       className="relative h-[50vh] flex items-center justify-center bg-cover bg-center"
-      style={{ backgroundImage: "url('/images/contact-hero.jpg')" }}
+      style={{
+        backgroundImage:
+          "url('https://www.shutterstock.com/image-photo/using-laptop-show-icon-address-600nw-2521386695.jpg')",
+      }}
     >
       {/* Overlay Blur & Tint */}
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
-
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px]"></div>
       {/* Ambient Glow Effects */}
       <div className="absolute top-10 left-1/3 w-44 h-44 bg-pink-400 opacity-20 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-10 right-1/4 w-48 h-48 bg-indigo-400 opacity-20 rounded-full blur-3xl pointer-events-none" />

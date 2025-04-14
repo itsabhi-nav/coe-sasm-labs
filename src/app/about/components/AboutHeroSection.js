@@ -6,7 +6,10 @@ export default function AboutHeroSection() {
   return (
     <section
       className="relative h-[50vh] md:h-[60vh] flex items-center justify-center bg-cover bg-center"
-      style={{ backgroundImage: "url('/images/about-hero.jpg')" }}
+      style={{
+        backgroundImage:
+          "url('https://images.pexels.com/photos/11167645/pexels-photo-11167645.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')",
+      }}
     >
       {/* Overlay */}
       <div className="absolute inset-0 bg-black/70 z-0"></div>

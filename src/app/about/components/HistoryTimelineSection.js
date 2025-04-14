@@ -1,109 +1,212 @@
 "use client";
 
-import React, { useState } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import {
+  motion,
+  useMotionValue,
+  useTransform,
+  animate,
+  AnimatePresence,
+} from "framer-motion";
+import { FiX } from "react-icons/fi";
+import dynamic from "next/dynamic";
 
-export default function HistoryTimelineSection() {
-  const timelineEvents = [
-    { year: "2010", event: "Establishment of COE‑SASM" },
-    { year: "2018", event: "Installation of the Anechoic Chamber" },
-    { year: "2021", event: "Launch of the Antenna Systems Simulation Centre" },
-    { year: "2024", event: "Installation of EMI/EMC Test Bed" },
+const Particles = dynamic(
+  () => import("react-tsparticles").then((mod) => mod.Particles),
+  { ssr: false }
+);
+
+export default function TimelineSection() {
+  const [focusedEvent, setFocusedEvent] = useState(null);
+
+  const milestones = [
+    {
+      year: "2010",
+      event: "COE-SASM Established",
+      details: "Founded to advance RF and antenna research at RVCE.",
+    },
+    {
+      year: "2018",
+      event: "Anechoic Chamber Installed",
+      details:
+        "State-of-the-art facility for RF testing and electromagnetic analysis.",
+    },
+    {
+      year: "2021",
+      event: "Simulation Centre Launched",
+      details:
+        "Advanced simulation and modeling tools for antenna design and optimization.",
+    },
+    {
+      year: "2024",
+      event: "EMI/EMC Test Bed Installed",
+      details:
+        "Expanded into electromagnetic compatibility testing for defense applications.",
+    },
   ];
 
-  const [pause, setPause] = useState(false);
+  const getDimensions = () => {
+    if (typeof window === "undefined")
+      return { baseRadius: 50, radiusStep: 40 };
+    const width = window.innerWidth;
+    return width < 500
+      ? { baseRadius: 20, radiusStep: 18 }
+      : width < 1024
+      ? { baseRadius: 30, radiusStep: 25 }
+      : { baseRadius: 50, radiusStep: 40 };
+  };
+
+  const { baseRadius, radiusStep } = getDimensions();
+
+  const angle1 = useMotionValue(0);
+  const angle2 = useMotionValue(0);
+  const angle3 = useMotionValue(0);
+  const angle4 = useMotionValue(0);
+
+  const rot1 = useTransform(angle1, (a) => -a);
+  const rot2 = useTransform(angle2, (a) => -a);
+  const rot3 = useTransform(angle3, (a) => -a);
+  const rot4 = useTransform(angle4, (a) => -a);
+
+  const angles = [angle1, angle2, angle3, angle4];
+  const counterRotations = [rot1, rot2, rot3, rot4];
+
+  useEffect(() => {
+    const controls = angles.map((angle, index) =>
+      animate(angle, 360, {
+        duration: 30 + index * 10,
+        repeat: Infinity,
+        ease: "linear",
+      })
+    );
+    return () => controls.forEach((ctrl) => ctrl.stop());
+  }, [angles]);
 
   return (
-    <section className="py-20 bg-gradient-to-br from-white via-gray-50 to-gray-100">
-      <div className="max-w-5xl mx-auto px-6">
-        <motion.h2
-          className="text-3xl sm:text-4xl font-extrabold text-center text-gray-800 font-orbitron mb-14"
-          initial={{ opacity: 0, y: -20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+    <section className="relative overflow-hidden py-20 min-h-[90vh] sm:min-h-screen bg-gradient-to-br from-gray-900 to-purple-950 text-white">
+      {/* Particles */}
+      <Particles
+        className="absolute inset-0 z-0"
+        options={{
+          particles: {
+            number: { value: 30 },
+            color: { value: "#ffffff" },
+            size: { value: 2 },
+          },
+        }}
+      />
+
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-black/30 backdrop-blur-sm z-10" />
+
+      {/* Main Content */}
+      <div className="relative z-20 flex flex-col lg:flex-row items-center justify-center gap-12 px-4">
+        {/* Title Section */}
+        <motion.div
+          className="text-center lg:text-left max-w-lg mb-8"
+          initial={{ opacity: 0, y: -30 }}
+          animate={{ opacity: 1, y: 0 }}
         >
-          Our Journey
-          <div className="w-28 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 mx-auto mt-3 rounded-full animate-pulse" />
-        </motion.h2>
+          <h2 className="text-3xl sm:text-4xl font-extrabold font-orbitron">
+            Our Cosmic Milestones
+          </h2>
+          <div className="w-28 h-1 mx-auto lg:mx-0 mt-3 rounded-full animate-pulse bg-gradient-to-r from-indigo-400 to-pink-500" />
+        </motion.div>
 
-        <div className="relative border-l-4 border-indigo-500 ml-[50%] transform -translate-x-1/2">
-          <div className="space-y-16">
-            {timelineEvents.map((item, index) => {
-              const isLeft = index % 2 === 0;
+        {/* Orbit System */}
+        <div className="relative w-full max-w-[500px] aspect-square mt-6 sm:mt-0">
+          <div className="relative flex items-center justify-center w-full h-full">
+            {/* Glowing Center */}
+            <motion.div className="absolute w-12 h-12 rounded-full bg-pink-400 opacity-80 blur-xl animate-pulse-slow" />
 
+            {/* Orbit Rings */}
+            {Array.from({ length: milestones.length + 1 }).map((_, i) => {
+              const size = (baseRadius + i * radiusStep) * 2;
               return (
                 <div
-                  key={index}
-                  className={`flex flex-col md:flex-row items-center ${
-                    isLeft ? "justify-start" : "justify-end"
-                  } relative`}
-                >
-                  {/* Milestone Glow */}
-                  <div
-                    onMouseEnter={() => setPause(true)}
-                    onMouseLeave={() => setPause(false)}
-                    className="absolute left-1/2 transform -translate-x-1/2 z-10 w-8 h-8 rounded-full bg-indigo-500 shadow-md ring-4 ring-indigo-300 animate-pulse-glow"
-                  >
-                    <div
-                      className={`absolute inset-0 rounded-full bg-indigo-400/20 animate-orbit ${
-                        pause ? "paused" : ""
-                      }`}
-                    />
-                  </div>
+                  key={i}
+                  className="absolute rounded-full border border-indigo-400/30"
+                  style={{ width: size, height: size }}
+                />
+              );
+            })}
 
-                  <div
-                    className={`w-full md:w-5/12 p-4 ${
-                      isLeft ? "text-right pr-8" : "text-left pl-8"
-                    }`}
+            {/* Orbiting Milestone Cards */}
+            {milestones.map((item, index) => {
+              const orbitRadius = baseRadius + index * radiusStep;
+
+              return (
+                <motion.div
+                  key={index}
+                  className="absolute top-1/2 left-1/2"
+                  style={{
+                    translateX: "-50%",
+                    translateY: "-50%",
+                    rotate: angles[index],
+                  }}
+                >
+                  <motion.div
+                    className="absolute text-center p-3 rounded-xl backdrop-blur-md border shadow-md cursor-pointer transition-all hover:scale-105"
+                    style={{
+                      translateX: orbitRadius,
+                      rotate: counterRotations[index],
+                      backgroundColor: "#2a2a3eaa",
+                      borderColor: "#3a3a5a",
+                      width: 150,
+                      fontSize: "12px",
+                    }}
+                    onClick={() => setFocusedEvent(index)}
                   >
-                    <p className="text-xl font-semibold text-gray-800">
+                    <p className="font-bold text-sm text-indigo-400">
                       {item.year}
                     </p>
-                    <p className="text-gray-600 mt-1">{item.event}</p>
-                  </div>
-                </div>
+                    <p className="text-xs text-white">{item.event}</p>
+                  </motion.div>
+                </motion.div>
               );
             })}
           </div>
         </div>
       </div>
 
-      {/* Animations */}
-      <style jsx>{`
-        .animate-pulse-glow {
-          box-shadow: 0 0 10px #6366f1, 0 0 20px #818cf8;
-          animation: pulse 2s infinite ease-in-out;
-        }
+      {/* Milestone Details Modal */}
+      <AnimatePresence>
+        {focusedEvent !== null && (
+          <motion.div
+            className="fixed inset-0 flex items-center justify-center z-50 bg-black/60"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="relative p-6 rounded-xl bg-[#1a1a2e] border border-[#3a3a5a] text-white max-w-md w-full mx-4"
+              initial={{ scale: 0.6 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.6 }}
+            >
+              <h3 className="text-xl font-bold">
+                {milestones[focusedEvent].year}
+              </h3>
+              <p className="mt-2 font-medium">
+                {milestones[focusedEvent].event}
+              </p>
+              <p className="mt-4 text-sm text-white">
+                {milestones[focusedEvent].details}
+              </p>
+              <button
+                onClick={() => setFocusedEvent(null)}
+                className="absolute top-2 right-2 p-1 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full transition"
+              >
+                <FiX className="text-white" />
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-        @keyframes pulse {
-          0% {
-            box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7);
-          }
-          70% {
-            box-shadow: 0 0 0 15px rgba(99, 102, 241, 0);
-          }
-          100% {
-            box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
-          }
-        }
-
-        .animate-orbit {
-          animation: orbit 8s linear infinite;
-        }
-
-        .paused {
-          animation-play-state: paused;
-        }
-
-        @keyframes orbit {
-          0% {
-            transform: rotate(0deg) translateX(6px) rotate(0deg);
-          }
-          100% {
-            transform: rotate(360deg) translateX(6px) rotate(-360deg);
-          }
-        }
-      `}</style>
+      {/* Background Glows */}
+      <div className="absolute top-0 left-1/3 w-72 h-72 bg-pink-400 opacity-20 rounded-full blur-3xl pointer-events-none animate-pulse-slow" />
+      <div className="absolute bottom-0 right-1/4 w-60 h-60 bg-indigo-400 opacity-20 rounded-full blur-3xl pointer-events-none animate-pulse-slow" />
     </section>
   );
 }

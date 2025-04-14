@@ -7,10 +7,13 @@ export default function MediaHeroSection() {
   return (
     <section
       className="relative h-[45vh] sm:h-[50vh] flex items-center justify-center bg-cover bg-center"
-      style={{ backgroundImage: "url('/images/media-hero.jpg')" }}
+      style={{
+        backgroundImage:
+          "url('https://images.pexels.com/photos/518543/pexels-photo-518543.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')",
+      }}
     >
       {/* Overlay */}
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-[3px]"></div>
 
       {/* Glow Effects */}
       <div className="absolute top-10 left-1/3 w-44 h-44 bg-purple-400 opacity-20 rounded-full blur-3xl pointer-events-none" />

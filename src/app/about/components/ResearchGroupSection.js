@@ -58,31 +58,35 @@ export default function ResearchGroupSection() {
           {facultyMembers.map((member, index) => (
             <motion.div
               key={index}
-              className="bg-white/60 backdrop-blur-lg border border-white/20 shadow-xl rounded-xl p-6 flex flex-col items-center text-center hover:shadow-indigo-200 transition-all duration-300"
+              className="bg-white/60 backdrop-blur-xl border border-white/20 shadow-lg rounded-xl p-6 flex flex-col items-center text-center transition-all duration-300 hover:shadow-indigo-200 hover:scale-[1.03]"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
             >
-              {/* Photo */}
-              <div className="relative w-24 h-24 mb-4">
-                <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 blur-xl opacity-30 animate-pulse" />
-                <Image
-                  src={member.image}
-                  alt={member.name}
-                  width={96}
-                  height={96}
-                  className="rounded-full object-cover border-4 border-white relative z-10"
-                />
+              {/* Glow Ring Frame */}
+              <div className="relative w-32 h-32 mb-6">
+                <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-indigo-400 to-purple-500 p-[4px] animate-pulse z-0">
+                  <div className="w-full h-full rounded-full bg-white/60 backdrop-blur-sm" />
+                </div>
+                <div className="absolute inset-[4px] rounded-full overflow-hidden z-10">
+                  <Image
+                    src={member.image}
+                    alt={member.name}
+                    width={112}
+                    height={112}
+                    className="object-cover w-full h-full rounded-full"
+                  />
+                </div>
               </div>
 
-              {/* Name & Role */}
+              {/* Name */}
               <h3 className="text-lg font-semibold text-gray-900 mb-1">
                 {member.name}
               </h3>
               <p className="text-sm text-gray-700 mb-2">{member.designation}</p>
 
-              {/* Email if available */}
+              {/* Email */}
               {member.email && (
                 <a
                   href={`mailto:${member.email}`}

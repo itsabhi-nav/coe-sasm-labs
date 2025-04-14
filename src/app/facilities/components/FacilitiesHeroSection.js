@@ -6,7 +6,10 @@ export default function FacilitiesHeroSection() {
   return (
     <section
       className="relative h-[50vh] md:h-[60vh] flex items-center justify-center bg-cover bg-center"
-      style={{ backgroundImage: "url('/images/facilities-hero.jpg')" }}
+      style={{
+        backgroundImage:
+          "url('https://media.istockphoto.com/id/1128670106/photo/laser-reflect-on-optic-table-un-quantum-laboratory-b.jpg?s=612x612&w=0&k=20&c=ICPNEddia-7oNHwRFSDezj9hytb5YdxrO7YlANweWhE=')",
+      }}
     >
       {/* Overlay */}
       <div className="absolute inset-0 bg-black/70 z-0" />

@@ -58,7 +58,7 @@ export default function AnechoicChamberSection() {
             transition={{ duration: 0.6, delay: 0.1 }}
           >
             <img
-              src="/images/chamber.jpg"
+              src="https://res.cloudinary.com/dcahaaigp/image/upload/v1744536101/maritime_antenna_in_specialized_antenna_anechoic_chamber_at_the_new_Surface_Sensors_and_Combat_Systems_F_dc1f39.jpg"
               alt="RF Anechoic Chamber"
               className="w-full h-auto object-cover rounded-xl"
             />
