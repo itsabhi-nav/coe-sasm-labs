@@ -47,7 +47,7 @@ export default function HeroSection({
   };
 
   return (
-    <section className="relative h-screen w-full overflow-hidden">
+    <section className="relative h-[60vh] sm:h-[30vh] xl:h-screen w-full overflow-hidden">
       {/* Background Video or Image */}
       <video
         className="absolute inset-0 w-full h-full object-cover z-0"
@@ -60,8 +60,8 @@ export default function HeroSection({
       {/* Fallback Image if needed */}
       {/* <Image src="/images/hero-bg.jpg" layout="fill" objectFit="cover" className="z-0" alt="Hero Background" /> */}
 
-      {/* Overlay */}
-      <div className="absolute inset-0 z-10 bg-black/60 backdrop-blur-sm" />
+      {/* Animated gradient overlay */}
+      <div className="absolute inset-0 z-10 backdrop-blur-[5px] animate-pulse bg-gradient-to-br from-fuchsia-700/30 via-indigo-700/30 to-sky-700/30" />
 
       {/* Particles */}
       <Particles className="absolute inset-0 z-10" options={particleOptions} />
