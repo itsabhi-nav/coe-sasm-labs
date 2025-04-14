@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
 import { FiVolume2, FiVolumeX } from "react-icons/fi";
 import Link from "next/link";
@@ -16,33 +16,24 @@ export default function IntroductionSection() {
   const [theme, setTheme] = useState("dark");
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [hasSpoken, setHasSpoken] = useState(false);
-  const [voice, setVoice] = useState(null);
   const sectionRef = useRef(null);
+  const voiceRef = useRef(null);
+  const ambientRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-20% 0px" });
 
   useEffect(() => {
+    if (voiceRef.current) voiceRef.current.volume = 0.9;
+    if (ambientRef.current) ambientRef.current.volume = 0.5;
+
     const savedTheme = localStorage.getItem("theme") || "dark";
     setTheme(savedTheme);
+
     const handleStorageChange = () => {
       setTheme(localStorage.getItem("theme") || "dark");
     };
+
     window.addEventListener("storage", handleStorageChange);
     return () => window.removeEventListener("storage", handleStorageChange);
-  }, []);
- 
-  // 🎙 Load voices and pick the best available
-  useEffect(() => {
-    const loadVoices = () => {
-      const voices = window.speechSynthesis.getVoices();
-      const preferredVoice =
-        voices.find((v) => v.name.includes("Google UK English Female")) ||
-        voices.find((v) => v.name.includes("Google US English")) ||
-        voices[0]; // fallback
-      setVoice(preferredVoice);
-    };
-
-    loadVoices();
-    window.speechSynthesis.onvoiceschanged = loadVoices;
   }, []);
 
   const prefersReducedMotion =
@@ -64,35 +55,54 @@ export default function IntroductionSection() {
     },
   };
 
-  const textToSpeak = `Welcome to COE-SASM at RVCE. We work on designing and testing smart antennas for wireless and defense applications. Our lab has advanced tools like anechoic chambers and EMI test beds. Feel free to explore more!`;
+  const toggleAudio = () => {
+    if (!voiceRef.current || !ambientRef.current) return;
 
-  const speakNow = () => {
-    const utterance = new SpeechSynthesisUtterance(textToSpeak);
-    utterance.voice = voice;
-    utterance.lang = "en-US";
-    utterance.pitch = 1.1;
-    utterance.rate = 0.95;
-    utterance.volume = 1;
-    utterance.onend = () => setIsSpeaking(false);
-    window.speechSynthesis.speak(utterance);
-    setIsSpeaking(true);
-    setHasSpoken(true);
-  };
-
-  const toggleSpeech = () => {
-    if (isSpeaking) {
-      window.speechSynthesis.cancel();
-      setIsSpeaking(false);
+    if (voiceRef.current.paused) {
+      voiceRef.current.play().catch(() => {});
+      ambientRef.current.play().catch(() => {});
+      setIsSpeaking(true);
     } else {
-      speakNow();
+      voiceRef.current.pause();
+      ambientRef.current.pause();
+      setIsSpeaking(false);
     }
   };
 
+  const handleAudioEnd = () => {
+    setIsSpeaking(false);
+    ambientRef.current.pause();
+    ambientRef.current.currentTime = 0;
+  };
+
+  // 🚀 Autoplay with muted workaround
   useEffect(() => {
-    if (isInView && !hasSpoken && !prefersReducedMotion && voice) {
-      speakNow();
+    const voice = voiceRef.current;
+    const ambient = ambientRef.current;
+
+    if (isInView && !hasSpoken && !prefersReducedMotion && voice && ambient) {
+      voice.muted = true;
+      ambient.muted = true;
+
+      const tryPlay = async () => {
+        try {
+          await voice.play();
+          await ambient.play();
+
+          setTimeout(() => {
+            voice.muted = false;
+            ambient.muted = false;
+            setIsSpeaking(true);
+            setHasSpoken(true);
+          }, 100);
+        } catch (error) {
+          console.warn("Autoplay failed:", error);
+        }
+      };
+
+      tryPlay();
     }
-  }, [isInView, voice]);
+  }, [isInView]);
 
   const animatedHeading = Array.from("Welcome to COE-SASM").map((char, idx) => (
     <motion.span
@@ -119,7 +129,6 @@ export default function IntroductionSection() {
       {!prefersReducedMotion && (
         <Particles className="absolute inset-0 z-0" options={particleOptions} />
       )}
-
       <div className="absolute inset-0 z-10 bg-black/10 backdrop-blur-sm" />
 
       <div className="relative z-20 max-w-4xl mx-auto px-6 text-center">
@@ -164,13 +173,15 @@ export default function IntroductionSection() {
           transition={{ delay: 0.6 }}
         >
           <button
-            onClick={toggleSpeech}
+            onClick={toggleAudio}
             className="p-3 rounded-full border-2 hover:scale-105 transition"
             style={{
               borderColor: "var(--accent)",
               color: "var(--accent)",
             }}
-            aria-label={isSpeaking ? "Stop narration" : "Start narration"}
+            aria-label={
+              isSpeaking ? "Pause voice narration" : "Play voice narration"
+            }
           >
             {isSpeaking ? (
               <FiVolumeX className="w-6 h-6" />
@@ -178,6 +189,17 @@ export default function IntroductionSection() {
               <FiVolume2 className="w-6 h-6" />
             )}
           </button>
+
+          {/* Narration */}
+          <audio
+            ref={voiceRef}
+            src="/audio/introaudio.mp3"
+            preload="auto"
+            onEnded={handleAudioEnd}
+          />
+
+          {/* Ambient Music */}
+          <audio ref={ambientRef} src="/audio/Beauty.mp3" preload="auto" loop />
         </motion.div>
 
         <motion.div
@@ -202,6 +224,7 @@ export default function IntroductionSection() {
         </motion.div>
       </div>
 
+      {/* Glow Circles */}
       <div className="absolute -top-10 left-1/3 w-72 h-72 bg-[var(--highlight)] opacity-20 rounded-full blur-3xl pointer-events-none animate-pulse-slow" />
       <div className="absolute -bottom-10 right-1/4 w-60 h-60 bg-[var(--accent)] opacity-20 rounded-full blur-3xl pointer-events-none animate-pulse-slow" />
     </section>

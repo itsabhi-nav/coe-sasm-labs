@@ -151,7 +151,7 @@ export default function TimelineSection() {
                   <p className="font-bold text-sm text-indigo-400">
                     {item.year}
                   </p>
-                  <p className="text-xs text-gray-400">{item.event}</p>
+                  <p className="text-xs text-white">{item.event}</p>
                 </motion.div>
               </motion.div>
             );
@@ -180,7 +180,7 @@ export default function TimelineSection() {
               <p className="mt-2 font-medium">
                 {milestones[focusedEvent].event}
               </p>
-              <p className="mt-4 text-sm text-gray-400">
+              <p className="mt-4 text-sm text-white">
                 {milestones[focusedEvent].details}
               </p>
               <button
