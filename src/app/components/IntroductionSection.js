@@ -29,7 +29,7 @@ export default function IntroductionSection() {
     window.addEventListener("storage", handleStorageChange);
     return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
-
+ 
   // 🎙 Load voices and pick the best available
   useEffect(() => {
     const loadVoices = () => {

@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useMemo } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence, useScroll } from "framer-motion";
-import { FiSun, FiMoon } from "react-icons/fi";
+import { Sun, Moon, Menu, ChevronDown } from "lucide-react";
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -99,7 +99,7 @@ export default function Header() {
     open: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.2, staggerChildren: 0.05 },
+      transition: { duration: 0.25, staggerChildren: 0.05 },
     },
     closed: { opacity: 0, y: -10, transition: { duration: 0.2 } },
   };
@@ -112,20 +112,20 @@ export default function Header() {
   return (
     <motion.header
       className={`sticky top-0 z-50 backdrop-blur-md transition-all duration-300 ${
-        isScrolled ? "py-2 shadow-lg" : "py-4"
+        isScrolled ? "py-3 shadow-xl" : "py-6"
       } bg-gradient-to-r from-cosmic-dark via-[#0d274f] to-cosmic-dark`}
       initial={{ y: -80 }}
       animate={{ y: 0 }}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between">
+      <div className="max-w-[1440px] mx-auto px-6 flex items-center justify-between">
         <Link
           href="/"
-          className="text-2xl font-extrabold font-orbitron tracking-wide text-white hover:text-cosmic-accent transition"
+          className="text-3xl font-bold font-orbitron tracking-wider text-white hover:text-cosmic-accent transition"
         >
           COE-SASM
         </Link>
 
-        <nav className="hidden md:flex gap-6 items-center text-sm font-medium text-white">
+        <nav className="hidden md:flex gap-4 items-center text-[15px] font-medium text-white">
           {navItems.map((item, i) =>
             item.subItems ? (
               <div key={i} className="relative">
@@ -135,13 +135,12 @@ export default function Header() {
                   className="hover:text-cosmic-accent flex items-center gap-1"
                 >
                   {item.label}
-                  <span
-                    className={`transition-transform duration-300 ${
+                  <ChevronDown
+                    size={16}
+                    className={`transition-transform ${
                       subMenu === item.label ? "rotate-180" : ""
                     }`}
-                  >
-                    ▼
-                  </span>
+                  />
                 </button>
                 <AnimatePresence>
                   {subMenu === item.label && (
@@ -150,7 +149,7 @@ export default function Header() {
                       initial="closed"
                       animate="open"
                       exit="closed"
-                      className="absolute left-0 mt-3 w-64 bg-cosmic-dark border border-cosmic-accent/30 text-white rounded-lg shadow-xl z-50 p-2 space-y-1"
+                      className="absolute left-0 mt-4 w-64 bg-cosmic-dark border border-cosmic-accent/30 text-white rounded-lg shadow-xl z-50 p-2 space-y-1"
                     >
                       {item.subItems.map((sub, j) => (
                         <motion.li key={j} variants={itemVariants}>
@@ -192,9 +191,9 @@ export default function Header() {
             className="p-2 rounded-full border border-white/20 hover:border-cosmic-accent transition"
           >
             {theme === "dark" ? (
-              <FiSun className="text-white" />
+              <Sun className="text-white" size={18} />
             ) : (
-              <FiMoon className="text-black" />
+              <Moon className="text-black" size={18} />
             )}
           </button>
         </nav>
@@ -203,9 +202,9 @@ export default function Header() {
         <div className="md:hidden">
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="text-white focus:outline-none focus:ring-2 focus:ring-cosmic-accent"
+            className="text-white p-2"
           >
-            ☰
+            <Menu />
           </button>
         </div>
       </div>
@@ -226,9 +225,15 @@ export default function Header() {
                 <div key={i}>
                   <button
                     onClick={() => toggleSubMenu(item.label)}
-                    className="w-full text-left"
+                    className="w-full text-left flex items-center justify-between"
                   >
-                    {item.label} ▼
+                    {item.label}
+                    <ChevronDown
+                      size={16}
+                      className={`transition-transform ${
+                        subMenu === item.label ? "rotate-180" : ""
+                      }`}
+                    />
                   </button>
                   {subMenu === item.label && (
                     <ul className="pl-4 mt-1 space-y-1">
