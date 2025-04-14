@@ -114,7 +114,7 @@ export default function TimelineSection() {
         </motion.div>
 
         {/* Orbit System */}
-        <div className="relative w-full max-w-[320px] sm:max-w-sm md:max-w-md lg:max-w-[500px] aspect-square mt-6 sm:mt-0">
+        <div className="relative w-full max-w-[500px] aspect-square mt-6 sm:mt-0">
           <div className="relative flex items-center justify-center w-full h-full">
             {/* Glowing Center */}
             <motion.div className="absolute w-12 h-12 rounded-full bg-pink-400 opacity-80 blur-xl animate-pulse-slow" />
