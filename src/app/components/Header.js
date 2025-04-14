@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useMemo } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence, useScroll } from "framer-motion";
 import { Sun, Moon, Menu, ChevronDown } from "lucide-react";
@@ -118,11 +119,18 @@ export default function Header() {
       animate={{ y: 0 }}
     >
       <div className="max-w-[1440px] mx-auto px-6 flex items-center justify-between">
-        <Link
-          href="/"
-          className="text-3xl font-bold font-orbitron tracking-wider hover:text-cosmic-accent transition text-white"
-        >
-          COE-SASM
+        {/* Logo + Title */}
+        <Link href="/" className="flex items-center gap-x-3 group">
+          <Image
+            src="/logo.png" // make sure your logo is inside /public/logo.png
+            alt="COE-SASM Logo"
+            width={40}
+            height={40}
+            className="object-contain"
+          />
+          <span className="text-3xl font-bold font-orbitron tracking-wider group-hover:text-cosmic-accent transition text-white">
+            COE-SASM
+          </span>
         </Link>
 
         {/* Desktop Nav */}

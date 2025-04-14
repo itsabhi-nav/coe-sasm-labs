@@ -2,7 +2,7 @@
 import "./globals.css";
 import Header from "./components/Header";
 import { Orbitron, Inter } from "next/font/google";
-
+import Loader from "./loader"; //
 // Load both fonts
 const orbitron = Orbitron({
   subsets: ["latin"],
@@ -33,6 +33,7 @@ export default function RootLayout({ children }) {
           transition-colors duration-300
         `}
       >
+        <Loader />
         <Header />
         <main>{children}</main>
       </body>
