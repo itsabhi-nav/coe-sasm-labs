@@ -122,14 +122,14 @@ export default function Header() {
         {/* Logo + Title */}
         <Link href="/" className="flex items-center gap-x-3 group">
           <Image
-            src="/logo.png" // make sure your logo is inside /public/logo.png
+            src="https://res.cloudinary.com/dcahaaigp/image/upload/v1744560504/1703130362341_yftsi2.jpg" // make sure your logo is inside /public/logo.png
             alt="COE-SASM Logo"
             width={40}
             height={40}
             className="object-contain"
           />
           <span className="text-3xl font-bold font-orbitron tracking-wider group-hover:text-cosmic-accent transition text-white">
-            COE-SASM
+            SASM
           </span>
         </Link>
 
