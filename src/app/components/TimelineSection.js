@@ -49,7 +49,9 @@ export default function TimelineSection() {
     if (typeof window === "undefined")
       return { baseRadius: 50, radiusStep: 40 };
     const width = window.innerWidth;
-    return width < 640
+    return width < 500
+      ? { baseRadius: 20, radiusStep: 18 }
+      : width < 1024
       ? { baseRadius: 30, radiusStep: 25 }
       : { baseRadius: 50, radiusStep: 40 };
   };
@@ -81,7 +83,7 @@ export default function TimelineSection() {
   }, [angles]);
 
   return (
-    <section className="relative overflow-hidden py-20 flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 to-purple-950 text-white">
+    <section className="relative overflow-hidden py-20 min-h-[90vh] sm:min-h-screen bg-gradient-to-br from-gray-900 to-purple-950 text-white">
       {/* Particles */}
       <Particles
         className="absolute inset-0 z-0"
@@ -93,73 +95,81 @@ export default function TimelineSection() {
           },
         }}
       />
+
+      {/* Overlay */}
       <div className="absolute inset-0 bg-black/30 backdrop-blur-sm z-10" />
 
-      {/* Heading */}
-      <motion.h2
-        className="z-20 text-3xl sm:text-4xl font-extrabold text-center font-orbitron mb-12"
-        initial={{ opacity: 0, y: -50 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
-        Our Cosmic Milestones
-        <div className="w-28 h-1 mx-auto mt-3 rounded-full animate-pulse bg-gradient-to-r from-indigo-400 to-pink-500" />
-      </motion.h2>
+      {/* Main Content */}
+      <div className="relative z-20 flex flex-col lg:flex-row items-center justify-center gap-12 px-4">
+        {/* Title Section */}
+        <motion.div
+          className="text-center lg:text-left max-w-lg mb-8"
+          initial={{ opacity: 0, y: -30 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <h2 className="text-3xl sm:text-4xl font-extrabold font-orbitron">
+            Our Cosmic Milestones
+          </h2>
+          <div className="w-28 h-1 mx-auto lg:mx-0 mt-3 rounded-full animate-pulse bg-gradient-to-r from-indigo-400 to-pink-500" />
+        </motion.div>
 
-      {/* Orbit System */}
-      <div className="relative z-20 w-full max-w-4xl">
-        <div className="relative flex items-center justify-center">
-          {/* Glowing center */}
-          <motion.div className="absolute w-16 h-16 rounded-full bg-pink-400 opacity-80 blur-xl animate-pulse-slow" />
+        {/* Orbit System */}
+        <div className="relative w-full max-w-[320px] sm:max-w-sm md:max-w-md lg:max-w-[500px] aspect-square mt-6 sm:mt-0">
+          <div className="relative flex items-center justify-center w-full h-full">
+            {/* Glowing Center */}
+            <motion.div className="absolute w-12 h-12 rounded-full bg-pink-400 opacity-80 blur-xl animate-pulse-slow" />
 
-          {/* Orbit rings */}
-          {Array.from({ length: milestones.length + 1 }).map((_, i) => {
-            const size = (baseRadius + i * radiusStep) * 2;
-            return (
-              <div
-                key={i}
-                className="absolute rounded-full border border-indigo-400/30"
-                style={{ width: size, height: size }}
-              />
-            );
-          })}
+            {/* Orbit Rings */}
+            {Array.from({ length: milestones.length + 1 }).map((_, i) => {
+              const size = (baseRadius + i * radiusStep) * 2;
+              return (
+                <div
+                  key={i}
+                  className="absolute rounded-full border border-indigo-400/30"
+                  style={{ width: size, height: size }}
+                />
+              );
+            })}
 
-          {/* Milestone cards */}
-          {milestones.map((item, index) => {
-            const orbitRadius = baseRadius + index * radiusStep;
+            {/* Orbiting Milestone Cards */}
+            {milestones.map((item, index) => {
+              const orbitRadius = baseRadius + index * radiusStep;
 
-            return (
-              <motion.div
-                key={index}
-                className="absolute top-1/2 left-1/2"
-                style={{
-                  translateX: "-50%",
-                  translateY: "-50%",
-                  rotate: angles[index],
-                }}
-              >
+              return (
                 <motion.div
-                  className="absolute text-center p-3 rounded-xl backdrop-blur-md border shadow-md cursor-pointer transition-all hover:scale-105"
+                  key={index}
+                  className="absolute top-1/2 left-1/2"
                   style={{
-                    translateX: orbitRadius,
-                    rotate: counterRotations[index],
-                    backgroundColor: "#2a2a3eaa",
-                    borderColor: "#3a3a5a",
-                    width: 170,
+                    translateX: "-50%",
+                    translateY: "-50%",
+                    rotate: angles[index],
                   }}
-                  onClick={() => setFocusedEvent(index)}
                 >
-                  <p className="font-bold text-sm text-indigo-400">
-                    {item.year}
-                  </p>
-                  <p className="text-xs text-white">{item.event}</p>
+                  <motion.div
+                    className="absolute text-center p-3 rounded-xl backdrop-blur-md border shadow-md cursor-pointer transition-all hover:scale-105"
+                    style={{
+                      translateX: orbitRadius,
+                      rotate: counterRotations[index],
+                      backgroundColor: "#2a2a3eaa",
+                      borderColor: "#3a3a5a",
+                      width: 150,
+                      fontSize: "12px",
+                    }}
+                    onClick={() => setFocusedEvent(index)}
+                  >
+                    <p className="font-bold text-sm text-indigo-400">
+                      {item.year}
+                    </p>
+                    <p className="text-xs text-white">{item.event}</p>
+                  </motion.div>
                 </motion.div>
-              </motion.div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </div>
 
-      {/* Modal */}
+      {/* Milestone Details Modal */}
       <AnimatePresence>
         {focusedEvent !== null && (
           <motion.div
@@ -194,7 +204,7 @@ export default function TimelineSection() {
         )}
       </AnimatePresence>
 
-      {/* Background glows */}
+      {/* Background Glows */}
       <div className="absolute top-0 left-1/3 w-72 h-72 bg-pink-400 opacity-20 rounded-full blur-3xl pointer-events-none animate-pulse-slow" />
       <div className="absolute bottom-0 right-1/4 w-60 h-60 bg-indigo-400 opacity-20 rounded-full blur-3xl pointer-events-none animate-pulse-slow" />
     </section>
