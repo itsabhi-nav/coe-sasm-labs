@@ -75,16 +75,16 @@ export default function IntroductionSection() {
     ambientRef.current.currentTime = 0;
   };
 
-  // 🚀 Autoplay with muted workaround
+  // 🚀 Autoplay with muted workaround + Initial load visible check
   useEffect(() => {
     const voice = voiceRef.current;
     const ambient = ambientRef.current;
 
-    if (isInView && !hasSpoken && !prefersReducedMotion && voice && ambient) {
-      voice.muted = true;
-      ambient.muted = true;
+    const playAudio = async () => {
+      if (voice && ambient) {
+        voice.muted = true;
+        ambient.muted = true;
 
-      const tryPlay = async () => {
         try {
           await voice.play();
           await ambient.play();
@@ -98,9 +98,25 @@ export default function IntroductionSection() {
         } catch (error) {
           console.warn("Autoplay failed:", error);
         }
-      };
+      }
+    };
 
-      tryPlay();
+    if (
+      !hasSpoken &&
+      !prefersReducedMotion &&
+      sectionRef.current &&
+      voice &&
+      ambient
+    ) {
+      const rect = sectionRef.current.getBoundingClientRect();
+      const isVisible =
+        rect.top >= 0 &&
+        rect.bottom <=
+          (window.innerHeight || document.documentElement.clientHeight);
+
+      if (isInView || isVisible) {
+        playAudio();
+      }
     }
   }, [isInView]);
 
