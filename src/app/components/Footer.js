@@ -57,7 +57,7 @@ export default function Footer() {
         { icon: FaFacebook, href: "https://facebook.com", label: "Facebook" },
       ],
       mapSrc:
-        "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!2s0x0:0x0!2zMTLCsDU3JzI4LjMiTiA3N8KwMzMnNTguNSJF!5e0!3m2!1sen!2sin!4v1680437234051",
+        "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3888.7508583285!2d77.4961262751191!3d12.92372801592596!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae3ee159ba3729%3A0x75a3463d510cf26e!2sR.%20V.%20College%20of%20Engineering!5e0!3m2!1sen!2sin!4v1744617416446!5m2!1sen!2sin",
     },
   };
 

@@ -111,20 +111,21 @@ export default function Header() {
 
   return (
     <motion.header
-      className={`sticky top-0 z-50 backdrop-blur-md transition-all duration-300 ${
+      className={`sticky top-0 z-50 transition-all duration-300 ${
         isScrolled ? "py-3 shadow-xl" : "py-6"
-      } bg-gradient-to-r from-cosmic-dark via-[#0d274f] to-cosmic-dark`}
+      } bg-[#0b1d3a] text-white`}
       initial={{ y: -80 }}
       animate={{ y: 0 }}
     >
       <div className="max-w-[1440px] mx-auto px-6 flex items-center justify-between">
         <Link
           href="/"
-          className="text-3xl font-bold font-orbitron tracking-wider text-white hover:text-cosmic-accent transition"
+          className="text-3xl font-bold font-orbitron tracking-wider hover:text-cosmic-accent transition text-white"
         >
           COE-SASM
         </Link>
 
+        {/* Desktop Nav */}
         <nav className="hidden md:flex gap-4 items-center text-[15px] font-medium text-white">
           {navItems.map((item, i) =>
             item.subItems ? (
@@ -149,7 +150,7 @@ export default function Header() {
                       initial="closed"
                       animate="open"
                       exit="closed"
-                      className="absolute left-0 mt-4 w-64 bg-cosmic-dark border border-cosmic-accent/30 text-white rounded-lg shadow-xl z-50 p-2 space-y-1"
+                      className="absolute left-0 mt-4 w-64 bg-[#0b1d3a] border border-cosmic-accent/30 text-white rounded-lg shadow-xl z-50 p-2 space-y-1"
                     >
                       {item.subItems.map((sub, j) => (
                         <motion.li key={j} variants={itemVariants}>
@@ -159,7 +160,7 @@ export default function Header() {
                             className={`block px-4 py-2 rounded-md transition ${
                               pathname === sub.href
                                 ? "bg-cosmic-accent/20 text-cosmic-accent"
-                                : "hover:bg-cosmic-accent/10"
+                                : "hover:bg-cosmic-accent/10 text-white"
                             }`}
                           >
                             {sub.label}
@@ -185,7 +186,7 @@ export default function Header() {
             )
           )}
 
-          {/* Theme toggle */}
+          {/* Desktop Theme Toggle */}
           <button
             onClick={toggleTheme}
             className="p-2 rounded-full border border-white/20 hover:border-cosmic-accent transition"
@@ -193,13 +194,24 @@ export default function Header() {
             {theme === "dark" ? (
               <Sun className="text-white" size={18} />
             ) : (
-              <Moon className="text-black" size={18} />
+              <Moon className="text-white" size={18} />
             )}
           </button>
         </nav>
 
-        {/* Mobile toggle */}
-        <div className="md:hidden">
+        {/* Mobile Theme Toggle + Menu */}
+        <div className="md:hidden flex items-center gap-3">
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-full border border-white/20 hover:border-cosmic-accent transition"
+          >
+            {theme === "dark" ? (
+              <Sun className="text-white" size={18} />
+            ) : (
+              <Moon className="text-white" size={18} />
+            )}
+          </button>
+
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             className="text-white p-2"
@@ -218,7 +230,7 @@ export default function Header() {
             initial="closed"
             animate="open"
             exit="closed"
-            className="md:hidden bg-cosmic-dark text-white px-6 py-4 space-y-4"
+            className="md:hidden bg-[#0b1d3a] text-white px-6 py-4 space-y-4"
           >
             {navItems.map((item, i) =>
               item.subItems ? (

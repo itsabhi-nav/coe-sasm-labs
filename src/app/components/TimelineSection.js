@@ -56,7 +56,6 @@ export default function TimelineSection() {
 
   const { baseRadius, radiusStep } = getDimensions();
 
-  // ✅ Safe, static hook usage (4 milestones)
   const angle1 = useMotionValue(0);
   const angle2 = useMotionValue(0);
   const angle3 = useMotionValue(0);
@@ -82,10 +81,7 @@ export default function TimelineSection() {
   }, [angles]);
 
   return (
-    <section
-      className="relative overflow-hidden py-20 flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 to-purple-950"
-      style={{ color: "var(--text-primary)" }}
-    >
+    <section className="relative overflow-hidden py-20 flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 to-purple-950 text-white">
       {/* Particles */}
       <Particles
         className="absolute inset-0 z-0"
@@ -106,20 +102,14 @@ export default function TimelineSection() {
         animate={{ opacity: 1, y: 0 }}
       >
         Our Cosmic Milestones
-        <div
-          className="w-28 h-1 mx-auto mt-3 rounded-full animate-pulse"
-          style={{
-            background:
-              "linear-gradient(to right, var(--accent), var(--highlight))",
-          }}
-        />
+        <div className="w-28 h-1 mx-auto mt-3 rounded-full animate-pulse bg-gradient-to-r from-indigo-400 to-pink-500" />
       </motion.h2>
 
       {/* Orbit System */}
       <div className="relative z-20 w-full max-w-4xl">
         <div className="relative flex items-center justify-center">
           {/* Glowing center */}
-          <motion.div className="absolute w-16 h-16 rounded-full bg-[var(--highlight)] opacity-80 blur-xl animate-pulse-slow" />
+          <motion.div className="absolute w-16 h-16 rounded-full bg-pink-400 opacity-80 blur-xl animate-pulse-slow" />
 
           {/* Orbit rings */}
           {Array.from({ length: milestones.length + 1 }).map((_, i) => {
@@ -152,18 +142,16 @@ export default function TimelineSection() {
                   style={{
                     translateX: orbitRadius,
                     rotate: counterRotations[index],
-                    backgroundColor: "var(--card-bg)",
-                    borderColor: "var(--card-border)",
+                    backgroundColor: "#2a2a3eaa",
+                    borderColor: "#3a3a5a",
                     width: 170,
                   }}
                   onClick={() => setFocusedEvent(index)}
                 >
-                  <p className="font-bold text-sm text-[var(--accent)]">
+                  <p className="font-bold text-sm text-indigo-400">
                     {item.year}
                   </p>
-                  <p className="text-xs text-[var(--text-secondary)]">
-                    {item.event}
-                  </p>
+                  <p className="text-xs text-gray-400">{item.event}</p>
                 </motion.div>
               </motion.div>
             );
@@ -181,7 +169,7 @@ export default function TimelineSection() {
             exit={{ opacity: 0 }}
           >
             <motion.div
-              className="relative p-6 rounded-xl bg-[var(--bg-primary)] border border-[var(--card-border)] text-[var(--text-primary)] max-w-md w-full mx-4"
+              className="relative p-6 rounded-xl bg-[#1a1a2e] border border-[#3a3a5a] text-white max-w-md w-full mx-4"
               initial={{ scale: 0.6 }}
               animate={{ scale: 1 }}
               exit={{ scale: 0.6 }}
@@ -192,7 +180,7 @@ export default function TimelineSection() {
               <p className="mt-2 font-medium">
                 {milestones[focusedEvent].event}
               </p>
-              <p className="mt-4 text-sm text-[var(--text-secondary)]">
+              <p className="mt-4 text-sm text-gray-400">
                 {milestones[focusedEvent].details}
               </p>
               <button
@@ -207,8 +195,8 @@ export default function TimelineSection() {
       </AnimatePresence>
 
       {/* Background glows */}
-      <div className="absolute top-0 left-1/3 w-72 h-72 bg-[var(--highlight)] opacity-20 rounded-full blur-3xl pointer-events-none animate-pulse-slow" />
-      <div className="absolute bottom-0 right-1/4 w-60 h-60 bg-[var(--accent)] opacity-20 rounded-full blur-3xl pointer-events-none animate-pulse-slow" />
+      <div className="absolute top-0 left-1/3 w-72 h-72 bg-pink-400 opacity-20 rounded-full blur-3xl pointer-events-none animate-pulse-slow" />
+      <div className="absolute bottom-0 right-1/4 w-60 h-60 bg-indigo-400 opacity-20 rounded-full blur-3xl pointer-events-none animate-pulse-slow" />
     </section>
   );
 }
