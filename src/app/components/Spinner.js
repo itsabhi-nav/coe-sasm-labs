@@ -24,7 +24,7 @@ const Spinner = () => {
           textShadow: "0 1px 2px rgba(255, 255, 255, 0.7)",
         }}
       >
-        Elevating Real Estate Experiences...
+        Innovating the Future of Wireless Systems...
       </p>
     </div>
   );
