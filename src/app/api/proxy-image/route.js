@@ -1,6 +1,6 @@
 // src/app/api/proxy-image/route.js
 
-export const runtime = "node"; // or "edge" if you're using Vercel Edge Functions
+export const runtime = "nodejs"; // fixed!
 
 export async function GET(req) {
   const { searchParams } = req.nextUrl;
@@ -35,7 +35,7 @@ export async function GET(req) {
     return new Response(Buffer.from(buffer), {
       headers: {
         "Content-Type": contentType,
-        "Cache-Control": "public, max-age=86400", // Cache for 1 day
+        "Cache-Control": "public, max-age=86400",
       },
     });
   } catch (error) {
