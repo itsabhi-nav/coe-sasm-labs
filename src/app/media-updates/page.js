@@ -1,9 +1,23 @@
 "use client";
+
 import React, { useState } from "react";
+import dynamic from "next/dynamic";
 import MediaHeroSection from "./components/MediaHeroSection";
-import GalleryMediaSection from "./components/GalleryMediaSection";
-import NewsEventsSection from "./components/NewsEventsSection";
-import Footer from "../components/Footer"; // Adjust path if needed
+import Footer from "../components/Footer";
+
+// ✅ Dynamically import server-rendered sections as client-wrapped
+const GalleryMediaSection = dynamic(
+  () => import("./components/GalleryMediaSection"),
+  {
+    ssr: false,
+  }
+);
+const NewsEventsSection = dynamic(
+  () => import("./components/NewsEventsSection"),
+  {
+    ssr: false,
+  }
+);
 
 export default function MediaUpdatesPage() {
   const [activeTab, setActiveTab] = useState("gallery");
@@ -36,6 +50,7 @@ export default function MediaUpdatesPage() {
               News & Events
             </button>
           </div>
+
           {/* Conditional Rendering of Tabs */}
           <div>
             {activeTab === "gallery" ? (
