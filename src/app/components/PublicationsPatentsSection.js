@@ -128,7 +128,7 @@ export default function PublicationsPatentsSection() {
         {/* CTA */}
         <div className="mt-12 text-center">
           <a
-            href="https://rvce.edu.in/IDRC-PATENTS-FILED"
+            href="research-innovation/publications-patents"
             target="_blank"
             rel="noreferrer"
             className="inline-block bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold py-3 px-6 rounded-full shadow-md transition-all duration-300"

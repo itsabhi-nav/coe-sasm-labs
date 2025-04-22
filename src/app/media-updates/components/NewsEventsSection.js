@@ -17,12 +17,12 @@ export default function NewsEventsSection() {
 
         const json = await res.json();
 
-        const items = (json.data || [])
-          .filter((item) => item.image)
-          .map((item) => ({
-            ...item,
-            imageUrl: `/api/proxy-image?id=${item.image}`,
-          }));
+        const items = (json.data || []).map((item) => ({
+          ...item,
+          imageUrl: item.image
+            ? `/api/proxy-image?id=${item.image}`
+            : "/placeholder.jpg",
+        }));
 
         setNewsEvents(items);
       } catch (err) {

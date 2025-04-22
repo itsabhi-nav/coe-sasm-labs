@@ -1,6 +1,4 @@
-// src/app/api/proxy-image/route.js
-
-export const runtime = "nodejs"; // fixed!
+export const runtime = "nodejs";
 
 export async function GET(req) {
   const { searchParams } = req.nextUrl;
